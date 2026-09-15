@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import type { CounterField, Stage } from '../types'
 import { calculateHitFactor, calculateTotalPoints } from '../scoring'
 import Counter from './Counter'
@@ -21,16 +22,39 @@ const COUNTER_ROWS: { field: CounterField; label: string }[] = [
 export default function StageCard({ stage, onUpdate, onRemove, canRemove }: StageCardProps) {
   const totalPoints = calculateTotalPoints(stage)
   const hitFactor = calculateHitFactor(stage)
+  const [isEditingName, setIsEditingName] = useState(false)
+  const nameInputRef = useRef<HTMLInputElement>(null)
+
+  function startEditingName() {
+    setIsEditingName(true)
+    requestAnimationFrame(() => nameInputRef.current?.select())
+  }
 
   return (
     <div className="mx-auto w-full max-w-md overflow-hidden rounded-lg bg-gray-100 shadow-md">
       <div className="flex items-center justify-between bg-blue-800 px-6 py-5">
-        <input
-          value={stage.name}
-          onChange={(e) => onUpdate({ name: e.target.value })}
-          className="w-full bg-transparent text-center text-2xl text-white placeholder-blue-200 outline-none"
-          aria-label="Stage name"
-        />
+        {isEditingName ? (
+          <input
+            ref={nameInputRef}
+            value={stage.name}
+            onChange={(e) => onUpdate({ name: e.target.value })}
+            onBlur={() => setIsEditingName(false)}
+            onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
+            className="w-full bg-transparent text-center text-2xl text-white placeholder-blue-200 outline-none"
+            aria-label="Stage name"
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={startEditingName}
+            className="flex w-full items-center justify-center gap-2 text-center text-2xl text-white"
+          >
+            <span className="truncate">{stage.name}</span>
+            <span aria-hidden className="shrink-0 text-lg text-blue-200 hover:text-white">
+              ✎
+            </span>
+          </button>
+        )}
         {canRemove && (
           <button
             type="button"
