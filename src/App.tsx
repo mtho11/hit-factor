@@ -2,7 +2,7 @@ import { useStages } from './hooks/useStages'
 import StageCard from './components/StageCard'
 
 export default function App() {
-  const { stages, addStage, removeStage, updateStage } = useStages()
+  const { stages, addStage, duplicateLastStage, removeStage, updateStage } = useStages()
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
@@ -21,13 +21,22 @@ export default function App() {
           />
         ))}
 
-        <button
-          type="button"
-          onClick={addStage}
-          className="rounded-lg border-2 border-dashed border-indigo-400 py-3 text-indigo-600 hover:bg-indigo-50"
-        >
-          + Add Stage
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={addStage}
+            className="flex-1 rounded-lg border-2 border-dashed border-indigo-400 py-3 text-indigo-600 hover:bg-indigo-50"
+          >
+            + Add Stage
+          </button>
+          <button
+            type="button"
+            onClick={duplicateLastStage}
+            className="flex-1 rounded-lg border-2 border-dashed border-indigo-400 py-3 text-indigo-600 hover:bg-indigo-50"
+          >
+            ⧉ Dup Stage
+          </button>
+        </div>
       </main>
     </div>
   )

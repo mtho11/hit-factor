@@ -40,6 +40,14 @@ export function useStages() {
     setStages((prev) => [...prev, createStage(`Stage ${prev.length + 1}`)])
   }
 
+  function duplicateLastStage() {
+    setStages((prev) => {
+      const last = prev[prev.length - 1]
+      if (!last) return prev
+      return [...prev, { ...last, id: crypto.randomUUID(), name: `${last.name} Copy` }]
+    })
+  }
+
   function removeStage(id: string) {
     setStages((prev) => (prev.length > 1 ? prev.filter((s) => s.id !== id) : prev))
   }
@@ -48,5 +56,5 @@ export function useStages() {
     setStages((prev) => prev.map((s) => (s.id === id ? { ...s, ...updates } : s)))
   }
 
-  return { stages, addStage, removeStage, updateStage }
+  return { stages, addStage, duplicateLastStage, removeStage, updateStage }
 }
