@@ -1,5 +1,5 @@
 import type { CounterField, Stage } from '../types'
-import { calculateHitFactor } from '../scoring'
+import { calculateHitFactor, calculateTotalPoints } from '../scoring'
 import Counter from './Counter'
 
 interface StageCardProps {
@@ -19,6 +19,7 @@ const COUNTER_ROWS: { field: CounterField; label: string }[] = [
 ]
 
 export default function StageCard({ stage, onUpdate, onRemove, canRemove }: StageCardProps) {
+  const totalPoints = calculateTotalPoints(stage)
   const hitFactor = calculateHitFactor(stage)
 
   return (
@@ -98,7 +99,10 @@ export default function StageCard({ stage, onUpdate, onRemove, canRemove }: Stag
           ))}
         </div>
 
-        <div className="mt-4 text-2xl font-bold text-gray-900">
+        <div className="mt-4 text-xl font-bold text-gray-900">
+          Points: {totalPoints}
+        </div>
+        <div className="text-2xl font-bold text-gray-900">
           Hit Factor: {hitFactor.toFixed(4)}
         </div>
       </div>
