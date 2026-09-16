@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hit Factor — Tutorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --bg: #0d0e10;
+    --chassis: #1c1e23;
+    --chassis-2: #26282e;
+    --chassis-3: #33363d;
+    --screen: #0a0c0e;
+    --led: #ffb020;
+    --led-dim: #7a5420;
+    --ink: #e7e8ea;
+    --ink-dim: #9aa0aa;
+    --ink-faint: #6b7078;
+    --rule: #2b2e34;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", sans-serif;
+    padding: 0 20px 96px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  /* ---- Masthead ---- */
+  header.masthead {
+    padding: 56px 0 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 56px;
+  }
+  header.masthead .kicker {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 10px;
+  }
+  header.masthead h1 {
+    font-family: "Orbitron", sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 6vw, 44px);
+    letter-spacing: 0.02em;
+    color: var(--led);
+    text-shadow: 0 0 18px var(--led-dim);
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  header.masthead p.sub {
+    color: var(--ink-dim);
+    font-size: 15px;
+    max-width: 46ch;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  header.masthead a.back {
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  header.masthead a.back:hover { color: var(--led); border-color: var(--led-dim); }
+
+  /* ---- Steps ---- */
+  .step {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .step:last-of-type { border-bottom: none; }
+  @media (min-width: 640px) {
+    .step { grid-template-columns: 1.05fr 1fr; align-items: start; gap: 36px; }
+  }
+
+  .step-text .eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--led);
+    letter-spacing: 0.08em;
+    margin: 0 0 8px;
+  }
+  .step-text h2 {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0 0 10px;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .step-text p {
+    color: var(--ink-dim);
+    font-size: 15px;
+    line-height: 1.65;
+    margin: 0 0 10px;
+  }
+  .step-text p:last-child { margin-bottom: 0; }
+  .step-text kbd {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12.5px;
+    background: var(--chassis-2);
+    border: 1px solid var(--chassis-3);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: var(--ink);
+  }
+  .step-text .note {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: var(--chassis);
+    border-left: 2px solid var(--led-dim);
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .step-text table.scoring {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+  }
+  .step-text table.scoring th,
+  .step-text table.scoring td {
+    text-align: right;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--rule);
+    font-variant-numeric: tabular-nums;
+  }
+  .step-text table.scoring th:first-child,
+  .step-text table.scoring td:first-child { text-align: left; color: var(--ink-dim); }
+  .step-text table.scoring th { color: var(--ink-faint); font-weight: 500; font-size: 11px; letter-spacing: 0.06em; }
+
+  /* ---- Screenshot frame ---- */
+  .shot-frame {
+    background: #08090a;
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 10px 10px 16px;
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6);
+  }
+  .shot-frame .chrome-dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 4px 10px;
+    min-width: 0;
+  }
+  .shot-frame .chrome-dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--chassis-3);
+    flex: none;
+  }
+  .shot-frame .chrome-label {
+    margin-left: auto;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ---- Recreated app card (mirrors StageCard.tsx) ---- */
+  .app-card {
+    background: var(--chassis);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 1px 0 rgba(0,0,0,0.4);
+  }
+  .app-card .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .app-card .name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #f1f2f3;
+  }
+  .app-card .name .pencil { font-size: 12px; color: var(--ink-faint); }
+  .app-card .name input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--led-dim);
+    color: #f1f2f3;
+    font: inherit;
+    outline: none;
+    width: 140px;
+  }
+  .app-card .icons { display: flex; align-items: center; gap: 12px; }
+  .app-card .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #34d399; box-shadow: 0 0 6px rgba(52,211,153,0.9);
+  }
+  .app-card .icon-btn { font-size: 13px; color: var(--ink-faint); }
+  .app-card .icon-btn.active { color: var(--led); }
+
+  .app-card .screen {
+    background: var(--screen);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .app-card .screen .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 4px;
+  }
+  .app-card .screen .time-val,
+  .app-card .screen .hf-val {
+    font-family: "Orbitron", sans-serif;
+    color: var(--led);
+    text-shadow: 0 0 10px var(--led-dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .app-card .screen .time-val { font-size: 24px; font-weight: 500; }
+  .app-card .screen .hf-val { font-size: 28px; font-weight: 700; text-align: right; }
+
+  .app-card .pf-toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .app-card .pf-toggle button {
+    flex: 1;
+    border-radius: 8px;
+    border: 1px solid var(--chassis-2);
+    background: var(--chassis-2);
+    color: var(--ink-faint);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 0;
+  }
+  .app-card .pf-toggle button.active {
+    border-color: var(--led-dim);
+    background: #2c2410;
+    color: var(--led);
+  }
+
+  .app-card .counters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .app-card .counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--chassis-2);
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .app-card .counter .lbl { font-size: 11.5px; color: var(--ink-dim); }
+  .app-card .counter .stepper { display: flex; align-items: center; gap: 8px; }
+  .app-card .counter .stepper button {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    background: var(--chassis-3);
+    color: #d7d9dc;
+    font-size: 12px;
+    box-shadow: 0 1.5px 0 #0f1013, inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .app-card .counter .val {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12.5px;
+    color: #d7d9dc;
+    width: 16px;
+    text-align: center;
+  }
+
+  .app-card .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--chassis-2);
+    padding-top: 12px;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .app-card .footer .points {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: var(--led);
+  }
+
+  .app-card + .app-card { margin-top: 14px; }
+  .app-card.ghost { opacity: 0.55; transform: scale(0.98); }
+  .add-stage-btn {
+    margin-top: 14px;
+    border: 1px dashed var(--chassis-3);
+    border-radius: 12px;
+    text-align: center;
+    padding: 12px 0;
+    color: var(--ink-faint);
+    font-size: 13px;
+  }
+  .callout-ring {
+    position: relative;
+  }
+  .callout-ring::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border: 1.5px solid var(--led);
+    border-radius: 10px;
+    box-shadow: 0 0 0 3px rgba(255,176,32,0.12);
+    pointer-events: none;
+  }
+
+  /* ---- Footer ---- */
+  footer.page-footer {
+    margin-top: 40px;
+    padding-top: 32px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 13px;
+  }
+  footer.page-footer a { color: var(--led); text-decoration: none; }
+  footer.page-footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">Walkthrough</p>
+    <h1>HIT FACTOR</h1>
+    <p class="sub">
+      A field guide to the stage calculator: name a stage, score it the way
+      USPSA does, and read your hit factor off the screen in one glance.
+    </p>
+    <a class="back" href="./index.html">&larr; Back to the calculator</a>
+  </header>
+
+  <!-- Step 1 -->
+  <section class="step">
+    <div class="step-text">
+      <p class="eyebrow">01 / Start a stage</p>
+      <h2>Every match opens with one stage, ready to go</h2>
+      <p>
+        The calculator loads with a single card named <strong>Stage 1</strong>.
+        Nothing to configure first &mdash; just start entering what's in front
+        of you: the shot timer's raw time, then your hits.
+      </p>
+      <p>
+        Everything you type is saved to this browser automatically, so
+        closing the tab or reloading mid-match won't lose your stages.
+      </p>
+    </div>
+    <div class="shot-frame">
+      <div class="chrome-dots"><span></span><span></span><span></span><span class="chrome-label">localhost — Hit Factor</span></div>
+      <div class="app-card">
+        <div class="row">
+          <span class="name">Stage 1 <span class="pencil">&#9998;</span></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen">
+          <div><span class="label">Time</span><span class="time-val">0</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val">0.0000</div></div>
+        </div>
+        <div class="pf-toggle"><button class="active">Minor</button><button>Major</button></div>
+        <div class="counters">
+          <div class="counter"><span class="lbl">A</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">C</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">D</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Miss</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">NS</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Proc</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+        </div>
+        <div class="footer"><span>Points</span><span class="points">0</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2 -->
+  <section class="step">
+    <div class="step-text">
+      <p class="eyebrow">02 / Name it</p>
+      <h2>Click the pencil to rename the stage</h2>
+      <p>
+        Click the &#9998; next to the stage name (or the name itself) to turn
+        it into a text field. Type the real stage name &mdash; <em>"Steel
+        Challenge"</em>, <em>"Stage 4 &ndash; El Presidente"</em>, whatever's on
+        the score sheet &mdash; and press <kbd>Enter</kbd> or click away to
+        save it.
+      </p>
+    </div>
+    <div class="shot-frame">
+      <div class="chrome-dots"><span></span><span></span><span></span><span class="chrome-label">localhost — Hit Factor</span></div>
+      <div class="app-card">
+        <div class="row">
+          <span class="name callout-ring"><input value="Steel Challenge" readonly /></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen">
+          <div><span class="label">Time</span><span class="time-val">0</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val">0.0000</div></div>
+        </div>
+        <div class="pf-toggle"><button class="active">Minor</button><button>Major</button></div>
+        <div class="counters">
+          <div class="counter"><span class="lbl">A</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">C</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">D</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Miss</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">NS</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Proc</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+        </div>
+        <div class="footer"><span>Points</span><span class="points">0</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 3 -->
+  <section class="step">
+    <div class="step-text">
+      <p class="eyebrow">03 / Set the power factor</p>
+      <h2>Minor and Major score C and D hits differently</h2>
+      <p>
+        Tap <strong>Minor</strong> or <strong>Major</strong> to match your
+        squad's chrono result. A-zone hits are worth 5 either way &mdash; the
+        toggle only changes what a C or D hit pays out.
+      </p>
+      <table class="scoring">
+        <thead><tr><th>Zone</th><th>Major</th><th>Minor</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>5</td><td>5</td></tr>
+          <tr><td>C</td><td>4</td><td>3</td></tr>
+          <tr><td>D</td><td>2</td><td>1</td></tr>
+          <tr><td>No-shoot / Procedural</td><td colspan="2">&minus;10 each</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="shot-frame">
+      <div class="chrome-dots"><span></span><span></span><span></span><span class="chrome-label">localhost — Hit Factor</span></div>
+      <div class="app-card">
+        <div class="row">
+          <span class="name">Steel Challenge <span class="pencil">&#9998;</span></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen">
+          <div><span class="label">Time</span><span class="time-val">0</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val">0.0000</div></div>
+        </div>
+        <div class="pf-toggle callout-ring"><button>Minor</button><button class="active">Major</button></div>
+        <div class="counters">
+          <div class="counter"><span class="lbl">A</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">C</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">D</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Miss</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">NS</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Proc</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+        </div>
+        <div class="footer"><span>Points</span><span class="points">0</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 4 -->
+  <section class="step">
+    <div class="step-text">
+      <p class="eyebrow">04 / Log time and hits</p>
+      <h2>Type the raw time, then tap through your hits</h2>
+      <p>
+        Enter the shot timer's raw time in the <strong>Time</strong> field.
+        Then use the &minus; / + steppers on each row &mdash; A, C, D, Miss,
+        No-Shoot (NS), and Procedural (Proc) &mdash; to build up the hit
+        count. Every tap recalculates instantly.
+      </p>
+      <p>Here's a stage shot Major in 14.32 seconds: 16 A's, 2 C's, one miss.</p>
+    </div>
+    <div class="shot-frame">
+      <div class="chrome-dots"><span></span><span></span><span></span><span class="chrome-label">localhost — Hit Factor</span></div>
+      <div class="app-card">
+        <div class="row">
+          <span class="name">Steel Challenge <span class="pencil">&#9998;</span></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen callout-ring">
+          <div><span class="label">Time</span><span class="time-val">14.32</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val">6.2151</div></div>
+        </div>
+        <div class="pf-toggle"><button>Minor</button><button class="active">Major</button></div>
+        <div class="counters">
+          <div class="counter"><span class="lbl">A</span><span class="stepper"><button>&minus;</button><span class="val">16</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">C</span><span class="stepper"><button>&minus;</button><span class="val">2</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">D</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Miss</span><span class="stepper"><button>&minus;</button><span class="val">1</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">NS</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Proc</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+        </div>
+        <div class="footer"><span>Points</span><span class="points">88</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 5 -->
+  <section class="step">
+    <div class="step-text">
+      <p class="eyebrow">05 / Read the score</p>
+      <h2>Points and Hit Factor update on every tap</h2>
+      <p>
+        <strong>Points</strong>, at the bottom of the card, is your zone
+        hits minus penalties: <code>(16&times;5) + (2&times;4) &minus; (1&times;0)</code>
+        = <strong>88</strong>.
+      </p>
+      <p>
+        <strong>Hit Factor</strong>, up on the screen, is points divided by
+        time: <code>88 &divide; 14.32</code> = <strong>6.2151</strong>, shown to
+        four decimal places &mdash; the same precision as a printed score sheet.
+      </p>
+      <p class="note">
+        No-shoots and procedurals are flat &minus;10 penalties regardless of
+        power factor, and they can push points (and hit factor) negative if
+        they outweigh your hits.
+      </p>
+    </div>
+    <div class="shot-frame">
+      <div class="chrome-dots"><span></span><span></span><span></span><span class="chrome-label">localhost — Hit Factor</span></div>
+      <div class="app-card">
+        <div class="row">
+          <span class="name">Steel Challenge <span class="pencil">&#9998;</span></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen">
+          <div><span class="label">Time</span><span class="time-val">14.32</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val callout-ring">6.2151</div></div>
+        </div>
+        <div class="pf-toggle"><button>Minor</button><button class="active">Major</button></div>
+        <div class="counters">
+          <div class="counter"><span class="lbl">A</span><span class="stepper"><button>&minus;</button><span class="val">16</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">C</span><span class="stepper"><button>&minus;</button><span class="val">2</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">D</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Miss</span><span class="stepper"><button>&minus;</button><span class="val">1</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">NS</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Proc</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+        </div>
+        <div class="footer"><span>Points</span><span class="points callout-ring">88</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 6 -->
+  <section class="step">
+    <div class="step-text">
+      <p class="eyebrow">06 / Duplicate a stage</p>
+      <h2>Use &#10697; to clone a card in place</h2>
+      <p>
+        Re-shooting a stage, or starting the next one from similar counts?
+        Click the &#10697; icon in a card's header. A copy &mdash; named
+        <em>"&hellip; Copy"</em> &mdash; appears directly beneath the original,
+        carrying over every value so you only have to adjust what changed.
+      </p>
+    </div>
+    <div class="shot-frame">
+      <div class="chrome-dots"><span></span><span></span><span></span><span class="chrome-label">localhost — Hit Factor</span></div>
+      <div class="app-card">
+        <div class="row">
+          <span class="name">Steel Challenge <span class="pencil">&#9998;</span></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn active callout-ring">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen">
+          <div><span class="label">Time</span><span class="time-val">14.32</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val">6.2151</div></div>
+        </div>
+        <div class="pf-toggle"><button>Minor</button><button class="active">Major</button></div>
+        <div class="counters">
+          <div class="counter"><span class="lbl">A</span><span class="stepper"><button>&minus;</button><span class="val">16</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">C</span><span class="stepper"><button>&minus;</button><span class="val">2</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">D</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Miss</span><span class="stepper"><button>&minus;</button><span class="val">1</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">NS</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">Proc</span><span class="stepper"><button>&minus;</button><span class="val">0</span><button>+</button></span></div>
+        </div>
+        <div class="footer"><span>Points</span><span class="points">88</span></div>
+      </div>
+      <div class="app-card ghost">
+        <div class="row">
+          <span class="name">Steel Challenge Copy <span class="pencil">&#9998;</span></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen">
+          <div><span class="label">Time</span><span class="time-val">14.32</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val">6.2151</div></div>
+        </div>
+        <div class="pf-toggle"><button>Minor</button><button class="active">Major</button></div>
+        <div class="counters">
+          <div class="counter"><span class="lbl">A</span><span class="stepper"><button>&minus;</button><span class="val">16</span><button>+</button></span></div>
+          <div class="counter"><span class="lbl">C</span><span class="stepper"><button>&minus;</button><span class="val">2</span><button>+</button></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 7 -->
+  <section class="step">
+    <div class="step-text">
+      <p class="eyebrow">07 / Build out the match</p>
+      <h2>Add and remove stages as you go</h2>
+      <p>
+        <strong>+ Add Stage</strong>, at the bottom of the list, appends a
+        fresh blank card. Each card's &times; removes just that stage &mdash;
+        it's hidden on the last remaining one, so you always have at least
+        one stage to work with.
+      </p>
+      <p>
+        Hit factors aren't summed across stages here, since USPSA match
+        scoring is percentage-based, not additive &mdash; this tool scores
+        one stage at a time, the way you'd fill in one line of a score sheet.
+      </p>
+    </div>
+    <div class="shot-frame">
+      <div class="chrome-dots"><span></span><span></span><span></span><span class="chrome-label">localhost — Hit Factor</span></div>
+      <div class="app-card">
+        <div class="row">
+          <span class="name">Steel Challenge <span class="pencil">&#9998;</span></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen">
+          <div><span class="label">Time</span><span class="time-val">14.32</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val">6.2151</div></div>
+        </div>
+      </div>
+      <div class="app-card ghost">
+        <div class="row">
+          <span class="name">Stage 3 <span class="pencil">&#9998;</span></span>
+          <span class="icons"><span class="dot"></span><span class="icon-btn">&#10697;</span><span class="icon-btn">&times;</span></span>
+        </div>
+        <div class="screen">
+          <div><span class="label">Time</span><span class="time-val">0</span></div>
+          <div><span class="label">Hit Factor</span><div class="hf-val">0.0000</div></div>
+        </div>
+      </div>
+      <div class="add-stage-btn callout-ring">+ Add Stage</div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    Built for the range. <a href="./index.html">Open the calculator &rarr;</a>
+  </footer>
+
+</div>
+</body>
+</html>

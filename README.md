@@ -4,6 +4,8 @@ A USPSA stage scoring calculator built with React, TypeScript, and Vite.
 
 **Live app:** https://mtho11.github.io/hit-factor/
 
+**Tutorial:** https://mtho11.github.io/hit-factor/tutorial.html
+
 ## Features
 
 - Editable stage name and Major/Minor power factor

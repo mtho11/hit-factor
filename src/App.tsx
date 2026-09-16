@@ -13,6 +13,12 @@ export default function App() {
         <p className="mt-1 font-body text-xs uppercase tracking-[0.2em] text-gray-500">
           Stage Calculator
         </p>
+        <a
+          href="tutorial.html"
+          className="mt-3 inline-block font-body text-xs text-gray-500 underline decoration-chassis-3 underline-offset-4 hover:text-led hover:decoration-led-dim"
+        >
+          How it works
+        </a>
       </header>
 
       <main className="mx-auto mt-8 flex max-w-md flex-col gap-6 px-4">
