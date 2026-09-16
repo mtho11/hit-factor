@@ -7,6 +7,7 @@ interface StageCardProps {
   stage: Stage
   onUpdate: (updates: Partial<Stage>) => void
   onRemove: () => void
+  onDuplicate: () => void
   canRemove: boolean
 }
 
@@ -19,7 +20,13 @@ const COUNTER_ROWS: { field: CounterField; label: string }[] = [
   { field: 'procedurals', label: 'Proc' },
 ]
 
-export default function StageCard({ stage, onUpdate, onRemove, canRemove }: StageCardProps) {
+export default function StageCard({
+  stage,
+  onUpdate,
+  onRemove,
+  onDuplicate,
+  canRemove,
+}: StageCardProps) {
   const totalPoints = calculateTotalPoints(stage)
   const hitFactor = calculateHitFactor(stage)
   const [isEditingName, setIsEditingName] = useState(false)
@@ -60,6 +67,15 @@ export default function StageCard({ stage, onUpdate, onRemove, canRemove }: Stag
             aria-hidden
             className="h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)]"
           />
+          <button
+            type="button"
+            onClick={onDuplicate}
+            className="shrink-0 font-body text-sm text-gray-500 hover:text-led"
+            aria-label="Duplicate stage"
+            title="Duplicate stage"
+          >
+            ⧉
+          </button>
           {canRemove && (
             <button
               type="button"

@@ -2,7 +2,7 @@ import { useStages } from './hooks/useStages'
 import StageCard from './components/StageCard'
 
 export default function App() {
-  const { stages, addStage, duplicateLastStage, removeStage, updateStage } = useStages()
+  const { stages, addStage, duplicateStage, removeStage, updateStage } = useStages()
 
   return (
     <div className="min-h-screen bg-[#0D0E10] pb-16">
@@ -22,26 +22,18 @@ export default function App() {
             stage={stage}
             onUpdate={(updates) => updateStage(stage.id, updates)}
             onRemove={() => removeStage(stage.id)}
+            onDuplicate={() => duplicateStage(stage.id)}
             canRemove={stages.length > 1}
           />
         ))}
 
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={addStage}
-            className="flex-1 rounded-xl border border-dashed border-chassis-3 py-3 font-body text-sm text-gray-400 hover:border-led-dim hover:text-led"
-          >
-            + Add Stage
-          </button>
-          <button
-            type="button"
-            onClick={duplicateLastStage}
-            className="flex-1 rounded-xl border border-dashed border-chassis-3 py-3 font-body text-sm text-gray-400 hover:border-led-dim hover:text-led"
-          >
-            ⧉ Dup Stage
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={addStage}
+          className="rounded-xl border border-dashed border-chassis-3 py-3 font-body text-sm text-gray-400 hover:border-led-dim hover:text-led"
+        >
+          + Add Stage
+        </button>
       </main>
     </div>
   )
