@@ -5,12 +5,17 @@ export default function App() {
   const { stages, addStage, duplicateLastStage, removeStage, updateStage } = useStages()
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-16">
-      <header className="bg-blue-800 py-8 text-center text-4xl text-white shadow">
-        Hit Factor Calculator
+    <div className="min-h-screen bg-[#0D0E10] pb-16">
+      <header className="border-b border-chassis-2 bg-chassis py-8 text-center shadow">
+        <h1 className="font-display text-3xl font-bold tracking-wide text-led [text-shadow:0_0_14px_theme(colors.led.dim)]">
+          HIT FACTOR
+        </h1>
+        <p className="mt-1 font-body text-xs uppercase tracking-[0.2em] text-gray-500">
+          Stage Calculator
+        </p>
       </header>
 
-      <main className="mx-auto mt-8 flex max-w-md flex-col gap-8 px-4">
+      <main className="mx-auto mt-8 flex max-w-md flex-col gap-6 px-4">
         {stages.map((stage) => (
           <StageCard
             key={stage.id}
@@ -25,14 +30,14 @@ export default function App() {
           <button
             type="button"
             onClick={addStage}
-            className="flex-1 rounded-lg border-2 border-dashed border-indigo-400 py-3 text-indigo-600 hover:bg-indigo-50"
+            className="flex-1 rounded-xl border border-dashed border-chassis-3 py-3 font-body text-sm text-gray-400 hover:border-led-dim hover:text-led"
           >
             + Add Stage
           </button>
           <button
             type="button"
             onClick={duplicateLastStage}
-            className="flex-1 rounded-lg border-2 border-dashed border-indigo-400 py-3 text-indigo-600 hover:bg-indigo-50"
+            className="flex-1 rounded-xl border border-dashed border-chassis-3 py-3 font-body text-sm text-gray-400 hover:border-led-dim hover:text-led"
           >
             ⧉ Dup Stage
           </button>
