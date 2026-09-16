@@ -47,30 +47,30 @@ export default function StageCard({
             onChange={(e) => onUpdate({ name: e.target.value })}
             onBlur={() => setIsEditingName(false)}
             onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
-            className="w-full bg-transparent font-body text-sm font-medium text-gray-100 outline-none"
+            className="min-h-11 w-full bg-transparent font-body text-base font-medium text-gray-100 outline-none"
             aria-label="Stage name"
           />
         ) : (
           <button
             type="button"
             onClick={startEditingName}
-            className="flex items-center gap-2 font-body text-sm font-medium text-gray-100"
+            className="-m-2 flex min-h-11 min-w-0 items-center gap-2 truncate p-2 font-body text-sm font-medium text-gray-100"
           >
             <span className="truncate">{stage.name}</span>
-            <span aria-hidden className="text-[13px] text-gray-500">
+            <span aria-hidden className="shrink-0 text-[13px] text-gray-500">
               ✎
             </span>
           </button>
         )}
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-1">
           <span
             aria-hidden
-            className="h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)]"
+            className="mr-1 h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)]"
           />
           <button
             type="button"
             onClick={onDuplicate}
-            className="shrink-0 font-body text-sm text-gray-500 hover:text-led"
+            className="-m-2 flex h-11 w-11 shrink-0 items-center justify-center p-2 font-body text-sm text-gray-500 hover:text-led"
             aria-label="Duplicate stage"
             title="Duplicate stage"
           >
@@ -80,7 +80,7 @@ export default function StageCard({
             <button
               type="button"
               onClick={onRemove}
-              className="shrink-0 font-body text-sm text-gray-500 hover:text-red-400"
+              className="-m-2 flex h-11 w-11 shrink-0 items-center justify-center p-2 font-body text-base text-gray-500 hover:text-red-400"
               aria-label="Remove stage"
             >
               &times;
@@ -119,7 +119,7 @@ export default function StageCard({
         <button
           type="button"
           onClick={() => onUpdate({ powerFactor: 'minor' })}
-          className={`flex-1 rounded-lg border py-1.5 font-body text-xs font-medium ${
+          className={`min-h-11 flex-1 rounded-lg border py-2.5 font-body text-xs font-medium ${
             stage.powerFactor === 'minor'
               ? 'border-led-dim bg-[#2C2410] text-led'
               : 'border-chassis-2 bg-chassis-2 text-gray-500'
@@ -130,7 +130,7 @@ export default function StageCard({
         <button
           type="button"
           onClick={() => onUpdate({ powerFactor: 'major' })}
-          className={`flex-1 rounded-lg border py-1.5 font-body text-xs font-medium ${
+          className={`min-h-11 flex-1 rounded-lg border py-2.5 font-body text-xs font-medium ${
             stage.powerFactor === 'major'
               ? 'border-led-dim bg-[#2C2410] text-led'
               : 'border-chassis-2 bg-chassis-2 text-gray-500'
